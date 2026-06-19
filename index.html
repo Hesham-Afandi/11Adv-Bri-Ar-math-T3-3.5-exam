@@ -378,6 +378,8 @@ function renderExam() {
     const isRTL = currentLang === 'ar';
     
     let html = '';
+    let questionNumber = 1; // ✅ الإصلاح: نبدأ من 1
+    
     examData.sections.forEach((section, sIdx) => {
         html += `
         <section class="bg-white p-6 rounded-xl shadow-lg">
@@ -385,17 +387,16 @@ function renderExam() {
             <ol id="section-${sIdx}-list" class="space-y-4 text-sm">`;
             
         section.questions.forEach((q, qIdx) => {
-            const globalIdx = sIdx * 4 + qIdx;
             const borderSide = isRTL ? 'border-r-4 pr-4' : 'border-l-4 pl-4';
             html += `
-                <li class="${borderSide} border-teal-500 py-2" id="q-${globalIdx}">
-                    <strong>${globalIdx + 1}.</strong> ${q.q[currentLang]}<br>`;
+                <li class="${borderSide} border-teal-500 py-2" id="q-${questionNumber}">
+                    <strong>${questionNumber}.</strong> ${q.q[currentLang]}<br>`;
                     
             q.options.forEach((opt, oIdx) => {
                 const radioSide = isRTL ? 'mr-4 ml-2' : 'ml-4 mr-2';
                 html += `
                     <label class="cursor-pointer block mt-1 ${isRTL ? 'mr-4' : 'ml-4'}">
-                        <input type="radio" name="q${globalIdx}" value="${String.fromCharCode(97 + oIdx)}" class="${radioSide}"> 
+                        <input type="radio" name="q${questionNumber}" value="${String.fromCharCode(97 + oIdx)}" class="${radioSide}"> 
                         ${lbl.option[oIdx]}) ${opt[currentLang]}
                     </label>`;
             });
@@ -405,6 +406,7 @@ function renderExam() {
                         ${lbl.answer} ${lbl.option[q.correct]}) ${q.options[q.correct][currentLang]} — ${q.answer[currentLang]}
                     </div>
                 </li>`;
+            questionNumber++; // ✅ نزيد الرقم
         });
         
         html += `
